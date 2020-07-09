@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="jumbotron">
+  <div class="container">
+    <h1 class="display-4">Was möchtest Du als nächstes tun?</h1>
+<p>
+	<a href="{% url 'ida_add_internal_microdata' %}" class="btn btn-primary btn active" role='button' aria-pressed='true'>Interne Mikrodaten hinzufügen</a>
+</p>
+  </div>
+</div>
+{% endblock %}
