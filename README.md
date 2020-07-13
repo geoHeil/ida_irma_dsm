@@ -25,3 +25,9 @@ Next, you can start the server.
 ```bash
 python manage.py runserver
 ```
+
+## Structure
+The project currently consists of three apps:
+* ida_core (this is the main development focus for now)
+* dsm_core
+* irma_core
