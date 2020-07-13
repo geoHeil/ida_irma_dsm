@@ -14,8 +14,12 @@ conda env create -f environment.yml
 conda activate djangoenv
 ```
 
-Start the server using:
+After checking out the code from git, there won't be a database. In order for the web app to function, you will have to apply migrations first.
+```bash
+python manage.py migrate
+```
 
+Next, you can start the server.
 ```bash
 python manage.py runserver
 ```
