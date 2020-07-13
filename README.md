@@ -7,7 +7,11 @@ Django prototype for managing metadata and user permissions.
 Use conda to manage your environment.
 
 ```bash
+# Create the environment from the YAML file
 conda env create -f environment.yml
+
+# Activate the environment
+conda activate djangoenv
 ```
 
 Start the server using:
