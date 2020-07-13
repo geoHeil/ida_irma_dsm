@@ -16,7 +16,9 @@ conda activate djangoenv
 
 After checking out the code from git, there won't be a database. In order for the web app to function, you will have to apply migrations first.
 ```bash
+# optional; if models changed: python manage.py makemigrations ida_core
 python manage.py migrate
+python manage.py createsuperuser # Admin user
 ```
 
 Next, you can start the server.
