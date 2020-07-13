@@ -21,7 +21,7 @@ class DatasetFamily(models.Model):
     database = models.ForeignKey(Database, on_delete=models.CASCADE)
     
     def __str__(self):
-            return self.database.name + "." + self.name
+            return self.name
 
 
 class AccessAchievement(models.Model):
