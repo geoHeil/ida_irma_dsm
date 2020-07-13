@@ -9,22 +9,36 @@
   </head>
 
   <body>
-
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-      <a class="navbar-brand" href="{% url 'ida_home' %}">IDA</a>
-      <a class="navbar-brand" href="{% url 'irma_home' %}">IRMA</a>
-      <a class="navbar-brand" href="{% url 'dsm_home' %}">DSM</a>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+      <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'ida_home' %}">IDA</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'irma_home' %}">IRMA</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'dsm_home' %}">DSM</a>
+          </li>
+        </ul>
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="admin">Administration</a>
+          </li>
+        </ul>
+      </div>
     </nav>
 
-
-    <div class="container">
-      <br/>
-      <a href="https://www.bundesbank.de/"><img src="{% static 'ida_core/Bundesbank_Logo.png' %}" alt="Bild kann nicht geladen werden" width="20%"></a>
-      <a href="https://www.bundesbank.de/de/bundesbank/forschung/fdsz"><img src="{% static 'ida_core/FDSZ.jpg' %}" alt="Bild kann nicht geladen werden" width="40%"></a>
-      <hr><br/>
+    <main role="main" class="container">
+      <div style="padding: 4rem 1.5rem;">
+        <a href="https://www.bundesbank.de/"><img src="{% static 'ida_core/Bundesbank_Logo.png' %}" alt="Bild kann nicht geladen werden" width="20%"></a>
+        <a href="https://www.bundesbank.de/de/bundesbank/forschung/fdsz"><img src="{% static 'ida_core/FDSZ.jpg' %}" alt="Bild kann nicht geladen werden" width="40%"></a>
+        <hr>
         {% block content %}
         {% endblock %}
-    </div>
+      </div>
+    </main>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
