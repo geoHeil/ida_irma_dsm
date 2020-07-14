@@ -43,18 +43,37 @@ class Consumer(models.Model):
             return self.name
 
 
-# Types of access to a dataset family (e.g. not anonymized, anonymized, ...)
-class AccessModeCategory(models.Model):
+# Mode of access (remote, secure on-site access, etc.)
+class AccessModeType(models.Model):
     name = models.CharField(max_length=100)
     
     def __str__(self):
             return self.name
 
+
+# Degree of anonymization of the dataset families
+class AccessModeAnonymization(models.Model):
+    name = models.CharField(max_length=100)
+    
+    def __str__(self):
+            return self.name
+
+
+# Research fields for an access mode (scientific, ESCB, etc.)
+class AccessModeResearchField(models.Model):
+    name = models.CharField(max_length=100)
+    
+    def __str__(self):
+            return self.name
+
+
 # Description of what needs to be achieved for a dataset family to be accessed in a specific form
 class AccessMode(models.Model):
     name = models.CharField(max_length=100)
-    access_mode_category = models.ForeignKey(AccessModeCategory, on_delete=models.PROTECT)
     dataset_family = models.ForeignKey(DatasetFamily, on_delete=models.CASCADE)
+    access_mode_type = models.ForeignKey(AccessModeType, on_delete=models.PROTECT)
+    access_mode_anonymization = models.ForeignKey(AccessModeAnonymization, on_delete=models.PROTECT)
+    access_mode_research_field = models.ForeignKey(AccessModeResearchField, on_delete=models.PROTECT)
     access_achievements = models.ManyToManyField(AccessAchievement)
 
     def __str__(self):
