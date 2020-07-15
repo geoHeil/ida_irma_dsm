@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 # Multiple dataset families grouped by origin and content
 class Database(models.Model):
     name = models.CharField(max_length=100)
+    description = models.CharField(max_length=200)
     
     def __str__(self):
             return self.name
@@ -14,6 +15,7 @@ class Database(models.Model):
 class DatasetFamily(models.Model):
     name = models.CharField(max_length=100)
     database = models.ForeignKey(Database, on_delete=models.CASCADE)
+    description = models.CharField(max_length=200)
     
     def __str__(self):
             return self.name
@@ -24,6 +26,7 @@ class DatasetFamily(models.Model):
 # multiple times for different projects
 class AccessAchievement(models.Model):
     name = models.CharField(max_length=100)
+    description = models.CharField(max_length=200)
     
     def __str__(self):
             return self.name
@@ -33,6 +36,7 @@ class AccessAchievement(models.Model):
 class Consumer(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
+    email = models.CharField(max_length=200)
     # TODO: if achievements might expire, look at:
     # https://docs.djangoproject.com/en/3.0/topics/db/models/#extra-fields-on-many-to-many-relationships
     access_achievements = models.ManyToManyField(AccessAchievement)
@@ -44,6 +48,7 @@ class Consumer(models.Model):
 # Mode of access (remote, secure on-site access, etc.)
 class AccessModeType(models.Model):
     name = models.CharField(max_length=100)
+    description = models.CharField(max_length=200)
     
     def __str__(self):
             return self.name
@@ -52,6 +57,7 @@ class AccessModeType(models.Model):
 # Degree of anonymization of the dataset families
 class AccessModeAnonymization(models.Model):
     name = models.CharField(max_length=100)
+    description = models.CharField(max_length=200)
     
     def __str__(self):
             return self.name
@@ -60,6 +66,7 @@ class AccessModeAnonymization(models.Model):
 # Research fields for an access mode (scientific, ESCB, etc.)
 class AccessModeResearchField(models.Model):
     name = models.CharField(max_length=100)
+    description = models.CharField(max_length=200)
     
     def __str__(self):
             return self.name
@@ -73,6 +80,7 @@ class AccessMode(models.Model):
     access_mode_anonymization = models.ForeignKey(AccessModeAnonymization, on_delete=models.PROTECT)
     access_mode_research_field = models.ForeignKey(AccessModeResearchField, on_delete=models.PROTECT)
     access_achievements = models.ManyToManyField(AccessAchievement)
+    description = models.CharField(max_length=200)
 
     def __str__(self):
             return self.name
