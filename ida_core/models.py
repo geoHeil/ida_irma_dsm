@@ -1,11 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-# TODO: check whether access regime is needed at all?
-# Description of how access to a dataset family can be permitted
-# class AccessRegime(models.Model):
-#    name = models.CharField(max_length=100)
-
 
 # Multiple dataset families grouped by origin and content
 class Database(models.Model):
@@ -24,6 +19,9 @@ class DatasetFamily(models.Model):
             return self.name
 
 
+# Achievements that can be unlocked in the process of requesting data
+# TODO: might need ProjectAchievement seperately, which has to be achieved
+# multiple times for different projects
 class AccessAchievement(models.Model):
     name = models.CharField(max_length=100)
     
