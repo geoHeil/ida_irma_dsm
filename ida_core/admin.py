@@ -1,6 +1,9 @@
 from django.contrib import admin
 
-from .models import AccessRegime, Database, DatasetFamily, AccessAchievement, Consumer, AccessModeType, AccessModeAnonymization, AccessModeResearchField, AccessMode
+
+from .models import AccessRegime, Database, DatasetFamily, AccessAchievement
+from .models import Consumer, AccessModeType, AccessModeAnonymization, AccessModeResearchField
+from .models import AccessMode, Project, ProjectGroup
 
 
 class DatasetFamilyInline(admin.TabularInline):
@@ -27,7 +30,6 @@ class DatabaseAdmin(admin.ModelAdmin):
 
 class DatasetFamilyAdmin(admin.ModelAdmin):
     list_display = ('name', 'database', 'description')
-    # inlines = [AccessModeInline]
 
 
 class AccessAchievementAdmin(admin.ModelAdmin):
@@ -54,6 +56,17 @@ class AccessModeAdmin(admin.ModelAdmin):
     list_display = ('name', 'description')
 
 
+class ProjectGroupInline(admin.TabularInline):
+    model = ProjectGroup
+    show_change_link = True
+    extra = 0
+
+
+class ProjectAdmin(admin.ModelAdmin):
+    list_display = ('name', 'description', 'project_lead')
+    inlines = [ProjectGroupInline]
+
+
 admin.site.register(AccessRegime, AccessRegimeAdmin)
 admin.site.register(Database, DatabaseAdmin)
 admin.site.register(DatasetFamily, DatasetFamilyAdmin)
@@ -63,5 +76,6 @@ admin.site.register(AccessModeType, AccessModeTypeAdmin)
 admin.site.register(AccessModeAnonymization, AccessModeAnonymizationAdmin)
 admin.site.register(AccessModeResearchField, AccessModeResearchFieldAdmin)
 admin.site.register(AccessMode, AccessModeAdmin)
+admin.site.register(Project, ProjectAdmin)
 
 admin.site.site_header = 'IDA/IRMA/DSM administration'
