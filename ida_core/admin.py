@@ -16,6 +16,7 @@ class AccessModeInline(admin.TabularInline):
 
 
 class AccessRegimeAdmin(admin.ModelAdmin):
+    list_display = ('name', 'description')
     inlines = [AccessModeInline]
 
 
