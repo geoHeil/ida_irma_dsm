@@ -2,6 +2,14 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
+# Collection of access modes
+class AccessRegime(models.Model):
+    name = models.CharField(max_length=100)
+    
+    def __str__(self):
+        return self.name
+
+
 # Multiple dataset families grouped by origin and content
 class Database(models.Model):
     name = models.CharField(max_length=100)
@@ -14,8 +22,9 @@ class Database(models.Model):
 # A data source (table) for which access can be requested
 class DatasetFamily(models.Model):
     name = models.CharField(max_length=100)
-    database = models.ForeignKey(Database, on_delete=models.CASCADE)
     description = models.CharField(max_length=200)
+    database = models.ForeignKey(Database, on_delete=models.CASCADE)
+    access_regime = models.ForeignKey(AccessRegime, on_delete=models.PROTECT)
     
     def __str__(self):
             return self.name
@@ -75,7 +84,7 @@ class AccessModeResearchField(models.Model):
 # Description of what needs to be achieved for a dataset family to be accessed in a specific form
 class AccessMode(models.Model):
     name = models.CharField(max_length=100)
-    dataset_family = models.ForeignKey(DatasetFamily, on_delete=models.CASCADE)
+    access_regime = models.ForeignKey(AccessRegime, on_delete=models.CASCADE)
     access_mode_type = models.ForeignKey(AccessModeType, on_delete=models.PROTECT)
     access_mode_anonymization = models.ForeignKey(AccessModeAnonymization, on_delete=models.PROTECT)
     access_mode_research_field = models.ForeignKey(AccessModeResearchField, on_delete=models.PROTECT)

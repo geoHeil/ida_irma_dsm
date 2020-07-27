@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Database, DatasetFamily, AccessAchievement, Consumer, AccessModeType, AccessModeAnonymization, AccessModeResearchField, AccessMode
+from .models import AccessRegime, Database, DatasetFamily, AccessAchievement, Consumer, AccessModeType, AccessModeAnonymization, AccessModeResearchField, AccessMode
 
 
 class DatasetFamilyInline(admin.TabularInline):
@@ -15,6 +15,10 @@ class AccessModeInline(admin.TabularInline):
     extra = 0
 
 
+class AccessRegimeAdmin(admin.ModelAdmin):
+    inlines = [AccessModeInline]
+
+
 class DatabaseAdmin(admin.ModelAdmin):
     list_display = ('name', 'description')
     inlines = [DatasetFamilyInline]
@@ -22,7 +26,7 @@ class DatabaseAdmin(admin.ModelAdmin):
 
 class DatasetFamilyAdmin(admin.ModelAdmin):
     list_display = ('name', 'database', 'description')
-    inlines = [AccessModeInline]
+    # inlines = [AccessModeInline]
 
 
 class AccessAchievementAdmin(admin.ModelAdmin):
@@ -46,9 +50,10 @@ class AccessModeResearchFieldAdmin(admin.ModelAdmin):
 
 
 class AccessModeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'dataset_family', 'description')
+    list_display = ('name', 'description')
 
 
+admin.site.register(AccessRegime, AccessRegimeAdmin)
 admin.site.register(Database, DatabaseAdmin)
 admin.site.register(DatasetFamily, DatasetFamilyAdmin)
 admin.site.register(AccessAchievement, AccessAchievementAdmin)
