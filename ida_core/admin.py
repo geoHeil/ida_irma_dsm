@@ -57,6 +57,7 @@ class AccessModeAdmin(admin.ModelAdmin):
 
 
 class ProjectGroupInline(admin.TabularInline):
+    readonly_fields = ('status',)
     model = ProjectGroup
     show_change_link = True
     extra = 0

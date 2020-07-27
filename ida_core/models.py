@@ -110,8 +110,24 @@ class Project(models.Model):
 class ProjectGroup(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     members = models.ManyToManyField(Consumer)
-    data = models.ManyToManyField(DatasetFamily)
+    dataset_families = models.ManyToManyField(DatasetFamily)
     access_mode_type = models.ForeignKey(AccessModeType, on_delete=models.PROTECT)
     access_mode_anonymization = models.ForeignKey(AccessModeAnonymization, on_delete=models.PROTECT)
     access_mode_research_field = models.ForeignKey(AccessModeResearchField, on_delete=models.PROTECT)
 
+    def status(self):
+        # Get required achievements
+        dsf = self.dataset_families.all()
+        required_achievements = []
+        for i in dsf:
+            access_regime = i.access_regime
+            access_modes = access_regime.accessmode_set.filter(access_mode_type=self.access_mode_type).filter(access_mode_anonymization=self.access_mode_anonymization).filter(access_mode_research_field=self.access_mode_research_field)
+            if access_modes.count() == 0:
+                return f"{i} has no suitable access mode available."
+            else:
+                required_achievements.extend(access_modes.last().access_achievements.all())
+        # Get available achievements
+        available_achievements = []
+        for member in self.members.all():
+            available_achievements.extend(member.access_achievements.all())
+        return "Required achievements:\n" + str(set(required_achievements)) + "\nAvailable achievements:\n" + str(set(available_achievements)) + "\nMissing achievements:\n" + str(set(required_achievements)-set(available_achievements))
