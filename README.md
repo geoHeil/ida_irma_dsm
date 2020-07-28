@@ -2,6 +2,8 @@
 
 Django prototype for managing metadata and user permissions.
 
+![](static/ida_core/FDSZ.jpg?raw=true)
+
 ## Getting Started
 
 Use conda to manage your environment.
