@@ -2,6 +2,7 @@
 
 Django prototype for managing metadata and user permissions.
 
+![](static/ida_core/Bundesbank_Logo.png?raw=true)
 ![](static/ida_core/FDSZ.jpg?raw=true)
 
 ## Getting Started
