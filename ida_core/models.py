@@ -115,7 +115,7 @@ class ProjectGroup(models.Model):
     access_mode_type = models.ForeignKey(AccessModeType, on_delete=models.PROTECT)
     access_mode_anonymization = models.ForeignKey(AccessModeAnonymization, on_delete=models.PROTECT)
 
-    def status(self):
+    def generate_status(self):
         # Get required achievements
         dsf = self.dataset_families.all()
         required_achievements = []
@@ -123,11 +123,48 @@ class ProjectGroup(models.Model):
             access_regime = i.access_regime
             access_modes = access_regime.accessmode_set.filter(access_mode_type=self.access_mode_type).filter(access_mode_anonymization=self.access_mode_anonymization).filter(access_mode_research_field=self.project.access_mode_research_field)
             if access_modes.count() == 0:
-                return f"{i} has no suitable access mode available."
+                return {
+                    'data_access': False,
+                    'achievements': False,
+                    'message': f"{i} has no suitable access mode available."
+                }
             else:
                 required_achievements.extend(access_modes.last().access_achievements.all())
         # Get available achievements
         available_achievements = []
         for member in self.members.all():
             available_achievements.extend(member.access_achievements.all())
-        return "Required achievements:\n" + str(set(required_achievements)) + "\nAvailable achievements:\n" + str(set(available_achievements)) + "\nMissing achievements:\n" + str(set(required_achievements)-set(available_achievements))
+        missing_achievements = set(required_achievements)-set(available_achievements)
+        #if len(missing_achievements) == 0
+        if len(missing_achievements) == 0:
+            return {
+                'data_access': True,
+                'achievements': True,
+                'message': 'No missing achievements.'
+            }
+        else:
+            return {
+                'data_access': True,
+                'achievements': False,
+                'message': f'Missing achievements:\n{str(missing_achievements)}'
+            }
+        #else
+        #    return {
+        #        'data_access': True,
+        #        'achievements': False,
+        #        'message': f'Missing achievements:\n{str(missing_achievements)}'
+        #    }
+    
+    def get_status_access_mode(self):
+        return self.generate_status()['data_access']
+    get_status_access_mode.boolean = True
+    get_status_access_mode.short_description = 'Access mode possible?'
+
+    def get_status_achievements(self):
+        return self.generate_status()['achievements']
+    get_status_achievements.boolean = True
+    get_status_achievements.short_description = 'Achievements fullfilled?'
+    
+    def get_status_message(self):
+        return self.generate_status()['message']
+    get_status_message.short_description = 'Status'
