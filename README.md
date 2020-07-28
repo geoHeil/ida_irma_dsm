@@ -21,6 +21,11 @@ python manage.py migrate
 python manage.py createsuperuser # Admin user
 ```
 
+Use the following command to fill the database with some limited test data.
+```bash
+python manage.py populate_db
+```
+
 Next, you can start the server.
 ```bash
 python manage.py runserver
