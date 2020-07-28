@@ -135,7 +135,6 @@ class ProjectGroup(models.Model):
         for member in self.members.all():
             available_achievements.extend(member.access_achievements.all())
         missing_achievements = set(required_achievements)-set(available_achievements)
-        #if len(missing_achievements) == 0
         if len(missing_achievements) == 0:
             return {
                 'data_access': True,
@@ -148,12 +147,6 @@ class ProjectGroup(models.Model):
                 'achievements': False,
                 'message': f'Missing achievements:\n{str(missing_achievements)}'
             }
-        #else
-        #    return {
-        #        'data_access': True,
-        #        'achievements': False,
-        #        'message': f'Missing achievements:\n{str(missing_achievements)}'
-        #    }
     
     def get_status_access_mode(self):
         return self.generate_status()['data_access']
