@@ -3,7 +3,7 @@ from django.contrib import admin
 
 from .models import AccessRegime, Database, DatasetFamily, AccessAchievement
 from .models import Consumer, AccessModeType, AccessModeAnonymization, AccessModeResearchField
-from .models import AccessMode, Project, ProjectGroup
+from .models import AccessMode, Project, ProjectGroup, AchievementRelation
 
 
 class DatasetFamilyInline(admin.TabularInline):
@@ -33,7 +33,7 @@ class DatasetFamilyAdmin(admin.ModelAdmin):
 
 
 class AccessAchievementAdmin(admin.ModelAdmin):
-    list_display = ('name', 'description')
+    list_display = ('name', 'description', 'isLinkedToProject', 'isLinkedToConsumer')
 
 
 class ConsumerAdmin(admin.ModelAdmin):
@@ -57,7 +57,7 @@ class AccessModeAdmin(admin.ModelAdmin):
 
 
 class ProjectGroupInline(admin.TabularInline):
-    readonly_fields = ('get_status_access_mode', 'get_status_achievements', 'get_status_message')
+    readonly_fields = ('get_status_access_mode', 'get_status_requirements', 'get_status_achievements', 'get_status_message')
     model = ProjectGroup
     show_change_link = True
     extra = 0
@@ -66,6 +66,10 @@ class ProjectGroupInline(admin.TabularInline):
 class ProjectAdmin(admin.ModelAdmin):
     list_display = ('name', 'description', 'project_lead')
     inlines = [ProjectGroupInline]
+
+
+class AchievementRelationAdmin(admin.ModelAdmin):
+    list_display = ('achievement', 'consumer', 'project')
 
 
 admin.site.register(AccessRegime, AccessRegimeAdmin)
@@ -78,5 +82,6 @@ admin.site.register(AccessModeAnonymization, AccessModeAnonymizationAdmin)
 admin.site.register(AccessModeResearchField, AccessModeResearchFieldAdmin)
 admin.site.register(AccessMode, AccessModeAdmin)
 admin.site.register(Project, ProjectAdmin)
+admin.site.register(AchievementRelation, AchievementRelationAdmin)
 
 admin.site.site_header = 'IDA/IRMA/DSM administration'
