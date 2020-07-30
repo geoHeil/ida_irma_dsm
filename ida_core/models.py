@@ -31,6 +31,14 @@ class DatasetFamily(models.Model):
             return self.name
 
 
+# Researcher Type: intern or extern
+class ResearcherType(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
+
 # Achievements that can be unlocked in the process of requesting data
 class AccessAchievement(models.Model):
     name = models.CharField(max_length=100)
@@ -59,6 +67,7 @@ class Consumer(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
     email = models.CharField(max_length=200)
+    researcher_type = models.ForeignKey(ResearcherType, on_delete=models.PROTECT)
     
     def __str__(self):
             return self.name
@@ -97,6 +106,7 @@ class AccessMode(models.Model):
     access_regime = models.ForeignKey(AccessRegime, on_delete=models.CASCADE)
     access_mode_type = models.ForeignKey(AccessModeType, on_delete=models.PROTECT)
     access_mode_anonymization = models.ForeignKey(AccessModeAnonymization, on_delete=models.PROTECT)
+    access_mode_researcher_type = models.ForeignKey(ResearcherType, on_delete=models.PROTECT)
     access_mode_research_field = models.ForeignKey(AccessModeResearchField, on_delete=models.PROTECT)
     access_achievements = models.ManyToManyField(AccessAchievement)
     description = models.CharField(max_length=200)
@@ -123,6 +133,7 @@ class ProjectGroup(models.Model):
     dataset_families = models.ManyToManyField(DatasetFamily)
     access_mode_type = models.ForeignKey(AccessModeType, on_delete=models.PROTECT)
     access_mode_anonymization = models.ForeignKey(AccessModeAnonymization, on_delete=models.PROTECT)
+    access_mode_researcher_type = models.ForeignKey(ResearcherType, on_delete=models.PROTECT)
 
     def generate_status(self):
         # Get required achievements and check whether there are suitable access
@@ -133,7 +144,7 @@ class ProjectGroup(models.Model):
         message = ""
         for i in dsf:
             access_regime = i.access_regime
-            access_modes = access_regime.accessmode_set.filter(access_mode_type=self.access_mode_type).filter(access_mode_anonymization=self.access_mode_anonymization).filter(access_mode_research_field=self.project.access_mode_research_field)
+            access_modes = access_regime.accessmode_set.filter(access_mode_type=self.access_mode_type).filter(access_mode_anonymization=self.access_mode_anonymization).filter(access_mode_researcher_type=self.access_mode_researcher_type).filter(access_mode_research_field=self.project.access_mode_research_field)
             if access_modes.count() == 0:
                 suitable_access_modes = False
                 message = message + f"{i} has no suitable access mode available for {self.access_mode_type}/{self.access_mode_anonymization}/{self.project.access_mode_research_field}.\n"

@@ -4,6 +4,7 @@ from django.contrib import admin
 from .models import AccessRegime, Database, DatasetFamily, AccessAchievement
 from .models import Consumer, AccessModeType, AccessModeAnonymization, AccessModeResearchField
 from .models import AccessMode, Project, ProjectGroup, AchievementRelation
+from .models import ResearcherType
 
 
 class DatasetFamilyInline(admin.TabularInline):
@@ -16,6 +17,10 @@ class AccessModeInline(admin.TabularInline):
     model = AccessMode
     show_change_link = True
     extra = 0
+
+
+class ResearcherTypeAdmin(admin.ModelAdmin):
+    list_display = ('name',)
 
 
 class AccessRegimeAdmin(admin.ModelAdmin):
@@ -38,7 +43,7 @@ class AccessAchievementAdmin(admin.ModelAdmin):
 
 
 class ConsumerAdmin(admin.ModelAdmin):
-    list_display = ('name', 'email')
+    list_display = ('name', 'email', 'researcher_type')
 
 
 class AccessModeTypeAdmin(admin.ModelAdmin):
@@ -73,6 +78,7 @@ class AchievementRelationAdmin(admin.ModelAdmin):
     list_display = ('achievement', 'consumer', 'project')
 
 
+admin.site.register(ResearcherType, ResearcherTypeAdmin)
 admin.site.register(AccessRegime, AccessRegimeAdmin)
 admin.site.register(Database, DatabaseAdmin)
 admin.site.register(DatasetFamily, DatasetFamilyAdmin)
