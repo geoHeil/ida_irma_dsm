@@ -151,7 +151,7 @@ class ProjectGroup(models.Model):
                 message = message + str(m) + ":\n" + "\n".join(["- " + str(a) for a in missing_achievements])
         if (achievements_fulfilled == False):
             return {
-                'data_access': False,
+                'data_access': True,
                 'requirements': requirements_str,
                 'achievements': False,
                 'message': message
@@ -176,7 +176,7 @@ class ProjectGroup(models.Model):
     def get_status_achievements(self):
         return self.generate_status()['achievements']
     get_status_achievements.boolean = True
-    get_status_achievements.short_description = 'Achievements fullfilled?'
+    get_status_achievements.short_description = 'Requirements fullfilled?'
     
     def get_status_message(self):
         return self.generate_status()['message']
