@@ -142,13 +142,13 @@ class ProjectGroup(models.Model):
         achievements_fulfilled = True
         message = "Missing achievements!\n"
         for m in self.members.all():
-            available_member_achievements = set(AchievementRelation.objects.filter(consumer=m).filter(Q(project=self.project) | Q(project__isnull=True)))
-            available_project_achievements = set(AchievementRelation.objects.filter(project=self.project).filter(consumer__isnull=True))
+            available_member_achievements = set([a.achievement for a in AchievementRelation.objects.filter(consumer=m).filter(Q(project=self.project) | Q(project__isnull=True))])
+            available_project_achievements = set([a.achievement for a in AchievementRelation.objects.filter(project=self.project).filter(consumer__isnull=True)])
             available_achievements = available_member_achievements | available_project_achievements
-            missing_achievements = available_achievements - required_achievements
+            missing_achievements = required_achievements - available_achievements
             if len(missing_achievements) > 0:
                 achievements_fulfilled = False
-                message = message + str(m) + ":\n" + "\n".join(["- " + str(a.achievement) for a in missing_achievements])
+                message = message + str(m) + ":\n" + "\n".join(["- " + str(a) for a in missing_achievements])
         if (achievements_fulfilled == False):
             return {
                 'data_access': False,
@@ -161,7 +161,7 @@ class ProjectGroup(models.Model):
                 'data_access': True,
                 'requirements': requirements_str,
                 'achievements': True,
-                'message': 'All achievements fulfilled.'
+                'message': message
             }
     
     def get_status_access_mode(self):
