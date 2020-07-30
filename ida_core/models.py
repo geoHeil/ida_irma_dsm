@@ -147,9 +147,20 @@ class ProjectGroup(models.Model):
             access_modes = access_regime.accessmode_set.filter(access_mode_type=self.access_mode_type).filter(access_mode_anonymization=self.access_mode_anonymization).filter(access_mode_researcher_type=self.access_mode_researcher_type).filter(access_mode_research_field=self.project.access_mode_research_field)
             if access_modes.count() == 0:
                 suitable_access_modes = False
-                message = message + f"{i} has no suitable access mode available for {self.access_mode_type}/{self.access_mode_anonymization}/{self.project.access_mode_research_field}.\n"
+                message = message + f"{i} has no suitable access mode available for {self.access_mode_type}/{self.access_mode_anonymization}/{self.access_mode_researcher_type}/{self.project.access_mode_research_field}.\n"
             else:
                 required_achievements.extend(access_modes.last().access_achievements.all())
+        if (suitable_access_modes == False):
+            return {
+                'data_access': False,
+                'requirements': message,
+                'achievements': False,
+                'message': message
+            }
+        for m in self.members.all():
+            if m.researcher_type != self.access_mode_researcher_type:
+                suitable_access_modes = False
+                message = message + f"{m} is not {self.access_mode_researcher_type}!\n"
         if (suitable_access_modes == False):
             return {
                 'data_access': False,
