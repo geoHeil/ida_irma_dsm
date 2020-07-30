@@ -195,7 +195,7 @@ class ProjectGroup(models.Model):
                 'data_access': True,
                 'requirements': requirements_str,
                 'achievements': True,
-                'message': message
+                'message': "Requirements fulfilled."
             }
     
     def get_status_access_mode(self):
