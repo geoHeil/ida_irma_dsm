@@ -33,7 +33,8 @@ class DatasetFamilyAdmin(admin.ModelAdmin):
 
 
 class AccessAchievementAdmin(admin.ModelAdmin):
-    list_display = ('name', 'description', 'isLinkedToProject', 'isLinkedToConsumer')
+    list_display = ('name', 'description', 'isLinkedToProject', 'isLinkedToConsumer', 'get_achievement_type_str')
+    readonly_fields = ('get_achievement_type_str',)
 
 
 class ConsumerAdmin(admin.ModelAdmin):

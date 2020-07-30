@@ -40,7 +40,19 @@ class AccessAchievement(models.Model):
     
     def __str__(self):
             return self.name
-
+    
+    def get_achievement_type_str(self):
+        if (self.isLinkedToConsumer):
+            if (self.isLinkedToProject):
+                return "all"
+            else:
+                return "per researcher"
+        else:
+            if (self.isLinkedToProject):
+                return "per project"
+            else:
+                return "invalid!"
+    get_achievement_type_str.short_description = 'Achievement type'
 
 # The researchers and analysts who would like to access data
 class Consumer(models.Model):
@@ -138,7 +150,7 @@ class ProjectGroup(models.Model):
         # Next, we have to check whether every member has all required
         # achievements.
         required_achievements = set(required_achievements)
-        requirements_str = "\n".join(["- " + str(a) for a in required_achievements])
+        requirements_str = "\n".join(["- " + str(a) + " (" + a.get_achievement_type_str() +")" for a in required_achievements])
         achievements_fulfilled = True
         message = "Missing achievements!\n"
         for m in self.members.all():
@@ -148,7 +160,7 @@ class ProjectGroup(models.Model):
             missing_achievements = required_achievements - available_achievements
             if len(missing_achievements) > 0:
                 achievements_fulfilled = False
-                message = message + str(m) + ":\n" + "\n".join(["- " + str(a) for a in missing_achievements])
+                message = message + str(m) + ":\n" + "\n".join(["- " + str(a) for a in missing_achievements]) +"\n\n"
         if (achievements_fulfilled == False):
             return {
                 'data_access': True,
