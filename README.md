@@ -2,6 +2,10 @@
 
 Django prototype for managing metadata and user permissions.
 
+![](static/ida_core/Bundesbank_Logo.png?raw=true)
+![](static/ida_core/IDA_Logo.jpg?raw=true)
+![](static/ida_core/FDSZ.jpg?raw=true)
+
 ## Getting Started
 
 Use conda to manage your environment.
@@ -19,6 +23,11 @@ After checking out the code from git, there won't be a database. In order for th
 # optional; if models changed: python manage.py makemigrations ida_core
 python manage.py migrate
 python manage.py createsuperuser # Admin user
+```
+
+Use the following command to fill the database with some limited test data.
+```bash
+python manage.py populate_db
 ```
 
 Next, you can start the server.

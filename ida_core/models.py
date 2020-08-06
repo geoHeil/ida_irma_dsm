@@ -2,6 +2,15 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
+# Collection of access modes
+class AccessRegime(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.CharField(max_length=200)
+    
+    def __str__(self):
+        return self.name
+
+
 # Multiple dataset families grouped by origin and content
 class Database(models.Model):
     name = models.CharField(max_length=100)
@@ -14,8 +23,9 @@ class Database(models.Model):
 # A data source (table) for which access can be requested
 class DatasetFamily(models.Model):
     name = models.CharField(max_length=100)
-    database = models.ForeignKey(Database, on_delete=models.CASCADE)
     description = models.CharField(max_length=200)
+    database = models.ForeignKey(Database, on_delete=models.CASCADE)
+    access_regime = models.ForeignKey(AccessRegime, on_delete=models.PROTECT)
     
     def __str__(self):
             return self.name
@@ -75,7 +85,7 @@ class AccessModeResearchField(models.Model):
 # Description of what needs to be achieved for a dataset family to be accessed in a specific form
 class AccessMode(models.Model):
     name = models.CharField(max_length=100)
-    dataset_family = models.ForeignKey(DatasetFamily, on_delete=models.CASCADE)
+    access_regime = models.ForeignKey(AccessRegime, on_delete=models.CASCADE)
     access_mode_type = models.ForeignKey(AccessModeType, on_delete=models.PROTECT)
     access_mode_anonymization = models.ForeignKey(AccessModeAnonymization, on_delete=models.PROTECT)
     access_mode_research_field = models.ForeignKey(AccessModeResearchField, on_delete=models.PROTECT)
@@ -84,3 +94,70 @@ class AccessMode(models.Model):
 
     def __str__(self):
             return self.name
+
+
+# Central entity for managing users and data access
+class Project(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.CharField(max_length=200)
+    project_lead = models.ForeignKey(Consumer, on_delete=models.PROTECT)
+    access_mode_research_field = models.ForeignKey(AccessModeResearchField, on_delete=models.PROTECT)
+
+    def __str__(self):
+            return self.name
+
+
+# Sub-group in a project which contains users and data
+class ProjectGroup(models.Model):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    members = models.ManyToManyField(Consumer)
+    dataset_families = models.ManyToManyField(DatasetFamily)
+    access_mode_type = models.ForeignKey(AccessModeType, on_delete=models.PROTECT)
+    access_mode_anonymization = models.ForeignKey(AccessModeAnonymization, on_delete=models.PROTECT)
+
+    def generate_status(self):
+        # Get required achievements
+        dsf = self.dataset_families.all()
+        required_achievements = []
+        for i in dsf:
+            access_regime = i.access_regime
+            access_modes = access_regime.accessmode_set.filter(access_mode_type=self.access_mode_type).filter(access_mode_anonymization=self.access_mode_anonymization).filter(access_mode_research_field=self.project.access_mode_research_field)
+            if access_modes.count() == 0:
+                return {
+                    'data_access': False,
+                    'achievements': False,
+                    'message': f"{i} has no suitable access mode available."
+                }
+            else:
+                required_achievements.extend(access_modes.last().access_achievements.all())
+        # Get available achievements
+        available_achievements = []
+        for member in self.members.all():
+            available_achievements.extend(member.access_achievements.all())
+        missing_achievements = set(required_achievements)-set(available_achievements)
+        if len(missing_achievements) == 0:
+            return {
+                'data_access': True,
+                'achievements': True,
+                'message': 'No missing achievements.'
+            }
+        else:
+            return {
+                'data_access': True,
+                'achievements': False,
+                'message': f'Missing achievements:\n{str(missing_achievements)}'
+            }
+    
+    def get_status_access_mode(self):
+        return self.generate_status()['data_access']
+    get_status_access_mode.boolean = True
+    get_status_access_mode.short_description = 'Access mode possible?'
+
+    def get_status_achievements(self):
+        return self.generate_status()['achievements']
+    get_status_achievements.boolean = True
+    get_status_achievements.short_description = 'Achievements fullfilled?'
+    
+    def get_status_message(self):
+        return self.generate_status()['message']
+    get_status_message.short_description = 'Status'
