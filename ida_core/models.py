@@ -223,3 +223,13 @@ class AchievementRelation(models.Model):
     consumer = models.ForeignKey(Consumer, null=True, blank=True, on_delete=models.PROTECT)
     project = models.ForeignKey(Project, null=True, blank=True, on_delete=models.PROTECT)
     # TODO: add valid from and valid to
+
+
+# Data Lab
+class DataLab(models.Model):
+    name = models.CharField(max_length=100)
+    project = models.ForeignKey(Project, on_delete=models.PROTECT)
+    description = models.CharField(max_length=200)
+
+    def __str__(self):
+            return self.name
