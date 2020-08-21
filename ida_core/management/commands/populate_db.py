@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from ida_core.models import AccessModeType, AccessModeAnonymization, AccessModeResearchField
+from ida_core.models import AccessModeType, AccessModeAnonymization, AccessModeResearchField, ResearcherType
 
 class Command(BaseCommand):
     help = 'Fill the database with (very limited) test data'
@@ -21,6 +21,8 @@ class Command(BaseCommand):
         AccessModeResearchField(name='Scientific research',description='Scientific research').save()
         AccessModeResearchField(name='Monetary policy',description='Monetary policy').save()
         AccessModeResearchField(name='Tasks of the ESCB',description='Exercise of the tasks of the ESCB').save()
+        ResearcherType(name='Internal').save()
+        ResearcherType(name='External').save()
         print('Finished populating database.')
 
     def handle(self, *args, **options):
