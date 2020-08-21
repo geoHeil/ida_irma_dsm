@@ -4,7 +4,7 @@ from django.contrib import admin
 from .models import AccessRegime, Database, DatasetFamily, AccessAchievement
 from .models import Consumer, AccessModeType, AccessModeAnonymization, AccessModeResearchField
 from .models import AccessMode, Project, ProjectGroup, AchievementRelation
-from .models import ResearcherType
+from .models import ResearcherType, DataLab
 
 
 class DatasetFamilyInline(admin.TabularInline):
@@ -90,5 +90,6 @@ admin.site.register(AccessModeResearchField, AccessModeResearchFieldAdmin)
 admin.site.register(AccessMode, AccessModeAdmin)
 admin.site.register(Project, ProjectAdmin)
 admin.site.register(AchievementRelation, AchievementRelationAdmin)
+admin.site.register(DataLab)
 
 admin.site.site_header = 'IDA/IRMA/DSM administration'
