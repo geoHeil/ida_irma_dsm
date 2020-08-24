@@ -40,3 +40,10 @@ The project currently consists of three apps:
 * ida_core (this is the main development focus for now)
 * dsm_core
 * irma_core
+
+## Using Docker
+```bash
+docker build -t ida-django .
+docker run -p 8000:8000 ida-django
+```
+View the web app: http://localhost:8000/
