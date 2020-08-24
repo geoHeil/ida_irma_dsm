@@ -35,8 +35,23 @@ Next, you can start the server.
 python manage.py runserver
 ```
 
+Use the following commands to visualize the data model:
+```bash
+# To group all the application and output into PNG file
+python manage.py graph_models -a -g -o models.png
+# Include only ida_core
+python manage.py graph_models ida_core -o models_ida_core.png
+```
+
 ## Structure
 The project currently consists of three apps:
 * ida_core (this is the main development focus for now)
 * dsm_core
 * irma_core
+
+## Using Docker
+```bash
+docker build -t ida-django .
+docker run -p 8000:8000 ida-django
+```
+View the web app: http://localhost:8000/
